@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailPage extends StatelessWidget {
   final QueryDocumentSnapshot<Object?> event;
@@ -18,43 +18,123 @@ class EventDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Event Name: ${event['name']}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Icon(
+                  Icons.event,
+                  size: 38,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  '${event['name']}',
+                  style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             SizedBox(height: 10),
-            Text(
-              'Date: ${event['date']}',
-              style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Icon(Icons.date_range),
+                SizedBox(width: 5),
+                Text(
+                  '${event['date']}',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Spacer(), // Added Spacer widget to push the time to the right
+                Icon(Icons.timelapse),
+                Text(
+                  '${event['startTime']} - ${event['endTime']}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Icon(Icons.group),
+                SizedBox(width: 5),
+                Text(
+                  'Speakers',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              children: [
+                SizedBox(width: 25),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var speaker in event['speakers'])
+                      Row(
+                        children: [
+                          SizedBox(width: 5),
+                          Text(
+                            '• $speaker',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Icon(Icons.description),
+                SizedBox(width: 5),
+                Text(
+                  'Description:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  '${event['description']}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
             SizedBox(height: 10),
-            Text(
-              'Start Time: ${event['startTime']}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'End Time: ${event['endTime']}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Speakers: ${event['speakers'].join(', ')}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Description: ${event['description']}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Location: ${event['location']}',
-              style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Icon(Icons.location_on),
+                SizedBox(width: 5),
+                Text(
+                  '${event['location']}',
+                  style: TextStyle(fontSize: 16),
+                ),
+                TextButton(
+                    onPressed: () {
+                      _launchMapsUrl('${event['location']}');
+                    },
+                    child: Text("Navigate"))
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _launchMapsUrl(String location) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$location';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

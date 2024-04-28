@@ -34,17 +34,34 @@ class EventsPage extends StatelessWidget {
             itemCount: events.length,
             itemBuilder: (context, index) {
               final event = events[index];
-              return ListTile(
-                title: Text(event['name'] ?? 'No Event Name'),
-                subtitle: Text(event['date']),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventDetailPage(event: event),
-                    ),
-                  );
-                },
+              return Card(
+                elevation: 4, // Add elevation for a card-like effect
+                margin: EdgeInsets.symmetric(
+                    vertical: 8, horizontal: 16), // Adjust margins
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      12), // Round the corners of the card
+                ),
+                child: ListTile(
+                  leading:
+                      Icon(Icons.event), // Add event icon as leading widget
+                  title: Text(
+                    event['name'] ?? 'No Event Name',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    event['date'],
+                    style: TextStyle(fontWeight: FontWeight.w200),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventDetailPage(event: event),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );

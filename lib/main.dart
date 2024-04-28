@@ -8,6 +8,7 @@ import 'package:image_test/multipleImages/fileUpload.dart';
 import 'package:image_test/singleImages/CommunityAddpage.dart';
 import 'package:image_test/singleImages/CommunityViewPage.dart';
 import 'package:image_test/utils.dart';
+import 'package:image_test/videos/uploadVideo.dart';
 
 void main() async {
   await setUp();
@@ -43,7 +44,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> { 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(home: EventsPage());
